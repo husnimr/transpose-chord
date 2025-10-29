@@ -28,19 +28,31 @@ export const CHORDS = {
   B: [null, 2, 4, 4, 4, 2],
   Bm: [null, 2, 4, 4, 3, 2],
   B7: [null, 2, 1, 2, 0, 2],
-};
 
+  // Chord gantung / #
+  "C#": [null, 4, 6, 6, 6, 4],
+  "C#m": [null, 4, 6, 6, 5, 4],
+  "D#": [null, 6, 8, 8, 8, 6],
+  "D#m": [null, 6, 8, 8, 7, 6],
+  "F#": [2, 4, 4, 3, 2, 2],
+  "F#m": [2, 4, 4, 2, 2, 2],
+  "G#": [4, 6, 6, 5, 4, 4],
+  "G#m": [4, 6, 6, 4, 4, 4],
+  "A#": [null, 1, 3, 3, 3, 1],
+  "A#m": [null, 1, 3, 3, 2, 1],
+};
 
 export default function ChordOutput({ html }) {
   const [hoveredChord, setHoveredChord] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
+  // ✅ FIXED regex — hilangkan \b supaya # tidak diputus
   const wrappedHtml = (html || "")
     .split("\n")
     .map((line) =>
       line.replace(
-        /\b([A-G][#b]?m?(?:maj7|dim7|sus4|sus2|7|6|9|add9|aug|dim)?)\b/g,
-        `<span class="chord-output" data-chord="$1">$1</span>`
+        /([A-G](?:#|b)?m?(?:maj7|dim7|sus4|sus2|7|6|9|add9|aug|dim)?)/g,
+        `<span class="chord-output cursor-pointer text-pink-600 font-semibold" data-chord="$1">$1</span>`
       )
     )
     .join("<br/>");
@@ -51,7 +63,7 @@ export default function ChordOutput({ html }) {
       const rect = e.target.getBoundingClientRect();
       setTooltipPos({
         x: rect.left + rect.width / 2,
-        y: rect.top - 8,
+        y: rect.top - 10,
       });
       setHoveredChord(chord);
     }
@@ -74,8 +86,8 @@ export default function ChordOutput({ html }) {
         <div
           className="fixed z-50 bg-white border border-gray-400 rounded-md shadow-md p-2 text-[10px] leading-[10px] font-mono text-black"
           style={{
-            top: tooltipPos.y - 70,
-            left: tooltipPos.x,
+            top: tooltipPos.y - 5,
+            left: tooltipPos.x + 15, // geser dikit kanan
             transform: "translate(-50%, -100%)",
           }}
         >
@@ -87,44 +99,38 @@ export default function ChordOutput({ html }) {
 }
 
 function ChordDiagram({ chord }) {
-  const strings = ["E", "A", "D", "G", "B", "E"]; // kiri -> kanan
+  const strings = ["E", "A", "D", "G", "B", "E"];
   const frets = CHORDS[chord];
   if (!frets) return null;
 
-  const fretCount = 5; // kita tampilkan 5 fret: kolom 0..4 (kiri->kanan = fret5..fret1)
-
-  // buat grid 6 x 5, default '---'
+  const fretCount = 5;
   const grid = Array.from({ length: strings.length }, () =>
     Array.from({ length: fretCount }, () => "---")
   );
 
-  // tempatkan titik sesuai aturan: kolom = fretCount - fret
-  frets.forEach((fret, stringIndex) => {
-    if (fret === null) {
-      // mute: tampilkan " X " di posisi paling kanan (opsional); contohmu tidak menampilkan X, jadi kita biarkan '-' saja
-      // jika mau X di kiri/kanan, uncomment baris di bawah:
-      // grid[stringIndex][fretCount - 1] = " X ";
-    } else if (fret === 0) {
-      // open string: sesuai permintaan, biarkan tetap '-' (tidak menaruh O)
-      // kalau mau tampilkan O di kolom paling kanan: grid[stringIndex][fretCount - 1] = " O ";
-    } else if (fret > 0 && fret <= fretCount) {
-      const idx = fretCount - fret; // <--- kunci: fret1 -> idx = 4, fret3 -> idx = 2
-      grid[stringIndex][idx] = "-●-";
+  frets.forEach((fret, i) => {
+    if (fret > 0 && fret <= fretCount) {
+      const idx = fretCount - fret;
+      grid[i][idx] = "-●-";
     }
-    // fret > fretCount kita abaikan (tidak tampil)
   });
 
-  // gabungkan tiap baris menjadi string horizontal dan tambahkan label senar di kanan
-  const lines = grid.map((row, i) => {
-    // gabung dengan '|' di antaranya lalu sisipkan spasi + '|' + space + label
-    return `${row.join("|")}|| ${strings[i]}`;
-  });
+  const lines = grid.map((row, i) => `${row.join("|")}|| ${strings[i]}`);
+
+  const playable = frets.filter((f) => f !== null && f > 0);
+  const minFret = Math.min(...playable);
+  const showLabel = minFret > 3;
 
   return (
-    <pre className="text-[10px] font-mono text-black leading-[10px] whitespace-pre">
-      {lines.join("\n")}
-    </pre>
+    <div>
+      {showLabel && (
+        <div className="text-[9px] font-mono text-center mb-1">
+          Mulai dari fret {minFret}
+        </div>
+      )}
+      <pre className="text-[10px] font-mono text-black leading-[10px] whitespace-pre">
+        {lines.join("\n")}
+      </pre>
+    </div>
   );
 }
-
-
