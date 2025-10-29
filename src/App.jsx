@@ -10,8 +10,11 @@ import {
   transposeHtmlSpans,
 } from "./utils/transposeUtils";
 
-const defaultSample = `
-(Intro) G
+const defaultSample = `[Tulis lirik & chord atau hanya chordnya saja]
+Demo Chord [Contoh] 
+
+Intro 
+G
 
           G          Em
 I found a love.. for me
@@ -41,7 +44,25 @@ But darling just kiss me slow
               Em
 your heart is all I own
             C                   D
-And in your eyes you're holding mine`;
+And in your eyes you're holding mine
+
+Reff: 
+       Em   C             G
+ Baby, I'm dancing in the dark
+      D              Em
+ With you between my arms
+ C               G
+ Barefoot on the grass
+ D                 Em
+ Listening to our favourite song
+          C                 G
+ When you said you looked a mess
+             D               Em
+ I whispered underneath my breath
+         C
+ But you heard it
+          G        D          G
+ Darling, you look perfect tonight`;
 
 export default function App() {
   const [textareaValue, setTextareaValue] = useState("");

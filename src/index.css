@@ -15,11 +15,19 @@ body { @apply bg-gray-50; }
 
 /* chord output span style (same visual as original) */
 .chord-output {
-  font-weight: 700;
+  font-weight: bold;
   color: #cb2027;
-  font-family: Candara, Tahoma, Geneva, sans-serif;
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
 }
+
+.chord-output:hover {
+  color: #007bff;
+  text-decoration: underline;
+}
+
 .chord-husni a.selected {
   background: #cb2027;
   color: #FFF;
 }
+
