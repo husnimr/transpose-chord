@@ -22,7 +22,7 @@ body { @apply bg-gray-50; }
 }
 
 .chord-output:hover {
-  color: #007bff;
+  color: #e63946;
   text-decoration: underline;
 }
 
