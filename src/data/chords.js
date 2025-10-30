@@ -1,0 +1,126 @@
+// src/data/chords.js
+// chords by Husni Mubarok Ramadhan 2025
+export const CHORDS = {
+  A: { fret: [-1, 0, 2, 2, 2, 0], note: "" },
+  Am: { fret: [-1, 0, 2, 2, 1, 0], note: "" },
+  "A#": { fret: [-1, 1, 3, 3, 3, 1], note: "" },
+  "A#m": { fret: [-1, 1, 3, 3, 2, 1], note: "" },
+
+  B: { fret: [-1, 2, 4, 4, 4, 2], note: "" },
+  B7: { fret: [-1, 2, 1, 2, 0, 2], note: "" },
+  Bm: { fret: [-1, 2, 4, 4, 3, 2], note: "" },
+
+  C: { fret: [-1, 3, 2, 0, 1, 0], note: "" },
+  Cm: { fret: [-1, 3, 5, 5, 4, 3], note: "" },
+  "C#": { fret: [-1, 1, 3, 3, 3, 1], note: "Mulai dari fret 4" },
+  "C#m": { fret: [-1, 1, 3, 3, 2, 1], note: "Mulai dari fret 4" },
+
+  D: { fret: [-1, -1, 0, 2, 3, 2], note: "" },
+  Dm: { fret: [-1, -1, 0, 2, 3, 1], note: "" },
+  "D#": { fret: [-1, -1, 1, 3, 4, 3], note: "" },
+  "D#m": { fret: [-1, -1, 1, 3, 4, 2], note: "" },
+
+  E: { fret: [0, 2, 2, 1, 0, 0], note: "" },
+  Em: { fret: [0, 2, 2, 0, 0, 0], note: "" },
+
+  F: { fret: [1, 3, 3, 2, 1, 1], note: "" },
+  Fm: { fret: [1, 3, 3, 1, 1, 1], note: "" },
+  "F#": { fret: [2, 4, 4, 3, 2, 2], note: "" },
+  "F#m": { fret: [2, 4, 4, 2, 2, 2], note: "" },
+
+  G: { fret: [3, 2, 0, 0, 3, 3], note: "" },
+  Gm: { fret: [3, 5, 5, 3, 3, 3], note: "" },
+  "G#": { fret: [1, 3, 3, 2, 1, 1], note: "Mulai dari fret 4" },
+  "G#m": { fret: [1, 3, 3, 1, 1, 1], note: "Mulai dari fret 4" },
+
+  Ab: {fret : [1, 3, 3, 2, 1, 1], note: "Mulai dari fret 4"},
+  Bb: {fret : [-1, 1, 3, 3, 3, 1], note: ""},
+  Db: {fret : [-1, 1, 3, 3, 3, 1], note: "Mulai dari fret 4"},
+  Eb: {fret : [-1, -1, 1, 3, 4, 3], note: ""},
+  Gb: {fret : [2, 4, 4, 3, 2, 2], note: ""},
+
+  A5: { fret: [-1, 0, 2, 2, -1, -1], note: "" },
+  B5: { fret: [-1, 2, 4, 4, -1, -1], note: "" },
+  C5: { fret: [-1, 3, 5, 5, -1, -1], note: "" },
+  D5: { fret: [-1, -1, 0, 2, 3, -1], note: "" },
+  E5: { fret: [0, 2, 2, -1, -1, -1], note: "" },
+  F5: { fret: [1, 3, 3, -1, -1, -1], note: "" },
+  G5: { fret: [3, 5, 5, -1, -1, -1], note: "" },
+
+  "A#5": { fret: [-1, 1, 3, 3, -1, -1], note: "" },
+  "C#5": { fret: [-1, 1, 3, 3, -1, -1], note: "Mulai dari fret 4" },
+  "D#5": { fret: [-1, -1, 1, 3, 4, -1], note: "" },
+  "F#5": { fret: [2, 4, 4, -1, -1, -1], note: "" },
+  "G#5": { fret: [1, 3, 3, -1, -1, -1], note: "Mulai dari fret 4" },
+
+  "A7": { fret: [-1, 0, 2, 0, 2, 0], note: "" },
+  "B7": { fret: [-1, 2, 1, 2, 0, 2], note: "" },
+  "C7": { fret: [-1, 3, 2, 3, 1, 0], note: "" },
+  "D7": { fret: [-1, -1, 0, 2, 1, 2], note: "" },
+  "E7": { fret: [0, 2, 0, 1, 0, 0], note: "" },
+  "F7": { fret: [1, 3, 1, 2, 1, 1], note: "" },
+  "G7": { fret: [3, 2, 0, 0, 0, 1], note: "" },
+
+  "A#7": { fret: [-1, 1, 3, 1, 3, 1], note: "" },
+  "C#7": { fret: [-1, 1, 3, 1, 2, 1], note: "Mulai dari fret 4" },
+  "D#7": { fret: [-1, -1, 1, 3, 3, 3], note: "" },
+  "F#7": { fret: [2, 4, 2, 3, 2, 2], note: "" },
+  "G#7": { fret: [1, 3, 1, 1, 1, 1], note: "Mulai dari fret 4" },
+
+  "Am7": { fret: [-1, 0, 2, 0, 1, 0], note: "" },
+  "Bm7": { fret: [-1, 2, 4, 2, 3, 2], note: "" },
+  "Cm7": { fret: [-1, 3, 5, 3, 4, 3], note: "" },
+  "Dm7": { fret: [-1, -1, 0, 2, 1, 1], note: "" },
+  "Em7": { fret: [0, 2, 0, 0, 0, 0], note: "" },
+  "Fm7": { fret: [1, 3, 1, 1, 1, 1], note: "" },
+  "Gm7": { fret: [3, 5, 3, 3, 3, 3], note: "" },
+
+  "A#m7": { fret: [-1, 1, 3, 1, 2, 1], note: "" },
+  "C#m7": { fret: [-1, 1, 3, 1, 2, 1], note: "Mulai dari fret 4" },
+  "D#m7": { fret: [-1, -1, 1, 3, 2, 2], note: "" },
+  "F#m7": { fret: [2, 4, 2, 2, 2, 2], note: "" },
+  "G#m7": { fret: [1, 3, 1, 1, 1, 1], note: "Mulai dari fret 4" },
+
+  "Ab7": {fret: [-1, 1, 3, 1, 3, 1], note: "Mulai dari fret 4"},
+  "Bb7": {fret: [-1, 1, 3, 1, 2, 1], note: ""},
+  "Db7": {fret: [-1, 1, 3, 1, 2, 1], note: "Mulai dari fret 4"},
+  "Eb7": {fret: [-1, -1, 1, 3, 3, 3], note: ""},
+  "Gb7": {fret: [2, 4, 2, 3, 2, 2], note: ""},
+
+  "AMaj7": { fret: [-1, 0, 2, 1, 2, 0], note: "" },
+  "BMaj7": { fret: [-1, 2, 4, 3, 4, 2], note: "" },
+  "CMaj7": { fret: [-1, 3, 2, 0, 0, 0], note: "" },
+  "DMaj7": { fret: [-1, -1, 0, 2, 2, 2], note: "" },
+  "EMaj7": { fret: [0, 2, 1, 1, 0, 0], note: "" },
+  "FMaj7": { fret: [1, 3, 2, 2, 1, 1], note: "" },
+  "GMaj7": { fret: [3, 2, 0, 0, 2, 2], note: "" },
+
+  "A#Maj7": { fret: [-1, 1, 3, 2, 3, 1], note: "" },
+  "C#Maj7": { fret: [-1, 1, 3, 2, 3, 1], note: "Mulai dari fret 4" },
+  "D#Maj7": { fret: [-1, -1, 1, 3, 3, 3], note: "" },
+  "F#Maj7": { fret: [2, 4, 3, 3, 2, 2], note: "" },
+  "G#Maj7": { fret: [1, 3, 2, 2, 1, 1], note: "Mulai dari fret 4" },
+
+  "BbMaj7": {fret: [-1, 1, 3, 2, 3, 1], note: ""},
+  "DbMaj7": {fret: [-1, 1, 3, 2, 3, 1], note: "Mulai dari fret 4"},
+  "EbMaj7": {fret: [-1, -1, 1, 3, 3, 3], note: ""},
+  "GbMaj7": {fret: [2, 4, 3, 3, 2, 2], note: ""},
+
+  "A/C#": { fret: [-1, 4, 2, 2, 2, 0], note: "" },
+  "A#/D": { fret: [-1, 5, 2, 2, 2, 0], note: "" },
+  'B/C': { fret: [-1, 3, 4, 4, 4, 2], note: "" },
+  "B/D#": { fret: [-1, 2, 4, 4, 4, 6], note: "" },
+  "B/D#": { fret: [-1, 6, 4, 4, 4, 2], note: "" },
+  "B/Eb": { fret: [-1, 6, 4, 4, 4, 3], note: "" },
+  "C/B": { fret: [-1, 2, 0, 0, 1, 0], note: "" },
+  "C/E": { fret: [-1, 3, 2, 0, 1, 3], note: "" },
+
+  "Asus4": { fret: [-1, 0, 2, 2, 3, 0], note: "" },
+  "Bsus4": { fret: [-1, 2, 4, 4, 5, 2], note: "" },
+  "Csus4": { fret: [-1, 3, 3, 0, 1, 1], note: "" },
+  "Dsus4": { fret: [-1, -1, 0, 2, 3, 3], note: "" },
+  "Esus4": { fret: [0, 2, 2, 2, 0, 0], note: "" },
+  "Fsus4": { fret: [1, 3, 3, 3, 1, 1], note: "" },
+  "Gsus4": { fret: [3, 5, 5, 3, 3, 3], note: "" },
+
+};
