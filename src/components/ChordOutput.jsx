@@ -7,12 +7,22 @@ export default function ChordOutput({ html }) {
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
   // 🔥 regex: support A#, Ab, Amaj7, Am7, A/C#, G#m7b5, dll
-  const wrappedHtml = (html || "")
-    .replace(
-      /(?<![A-Za-z\/])([A-G](?:#|b)?(?:maj7|m7|m|sus2|sus4|add9|dim7|dim|aug|7|6|9)?(?:\/[A-G](?:#|b)?)?)(?![A-Za-z\/])/g,
-      `<span class="chord-span cursor-pointer text-pink-600 font-semibold" data-chord="$1">$1</span>`
-    )
-    .replace(/\n/g, "<br/>");
+const wrappedHtml = (html || "")
+  // Step 1: Tangkap slash chords seperti C/G, A/C#, F#/A#, G/B
+  .replace(
+    /(^|[\s>])([A-G](?:#|b)?(?:maj7|Maj7|m7|m|sus2|sus4|add9|dim7|dim|aug|7|6|9|11|13)?\/[A-G](?:#|b)?)(?=$|[\s<])/g,
+    (match, prefix, chord) =>
+      `${prefix}<span class="chord-span cursor-pointer text-pink-600 font-semibold" data-chord="${chord}">${chord}</span>`
+  )
+  // Step 2: Tangkap chord normal (tanpa slash)
+  .replace(
+    /(^|[\s>])([A-G](?:#|b)?(?:maj7|Maj7|m7|m|sus2|sus4|add9|dim7|dim|aug|7|6|9|11|13)?)(?=$|[\s<])/g,
+    (match, prefix, chord) =>
+      `${prefix}<span class="chord-span cursor-pointer text-pink-600 font-semibold" data-chord="${chord}">${chord}</span>`
+  )
+  // Step 3: Ganti newline jadi <br>
+  .replace(/\n/g, "<br/>");
+
 
   function handleMouseEnter(e) {
     const chord = e.target.getAttribute("data-chord");
