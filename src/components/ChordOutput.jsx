@@ -1,42 +1,15 @@
 // ChordOutput.jsx
 import { useState } from "react";
-
-const CHORDS = {
-  A: { fret: [-1, 0, 2, 2, 2, 0], note: "" },
-  Am: { fret: [-1, 0, 2, 2, 1, 0], note: "" },
-  "A#": { fret: [-1, 1, 3, 3, 3, 1], note: "" },
-  "A#m": { fret: [-1, 1, 3, 3, 2, 1], note: "" },
-  B: { fret: [-1, 2, 4, 4, 4, 2], note: "" },
-  Bm: { fret: [-1, 2, 4, 4, 3, 2], note: "" },
-  C: { fret: [-1, 3, 2, 0, 1, 0], note: "" },
-  Cm: { fret: [-1, 3, 5, 5, 4, 3], note: "" },
-  "C#": { fret: [-1, 1, 3, 3, 3, 1], note: "Mulai dari fret 4" },
-  "C#m": { fret: [-1, 1, 3, 3, 2, 1], note: "Mulai dari fret 4" },
-  D: { fret: [-1, -1, 0, 2, 3, 2], note: "" },
-  Dm: { fret: [-1, -1, 0, 2, 3, 1], note: "" },
-  "D#": { fret: [-1, -1, 1, 3, 4, 3], note: "" },
-  "D#m": { fret: [-1, -1, 1, 3, 4, 2], note: "" },
-  E: { fret: [0, 2, 2, 1, 0, 0], note: "" },
-  Em: { fret: [0, 2, 2, 0, 0, 0], note: "" },
-  F: { fret: [1, 3, 3, 2, 1, 1], note: "" },
-  Fm: { fret: [1, 3, 3, 1, 1, 1], note: "" },
-  "F#": { fret: [2, 4, 4, 3, 2, 2], note: "" },
-  "F#m": { fret: [2, 4, 4, 2, 2, 2], note: "" },
-  G: { fret: [3, 2, 0, 0, 3, 3], note: "" },
-  Gm: { fret: [3, 5, 5, 3, 3, 3], note: "" },
-  "G#": { fret: [1, 3, 3, 2, 1, 1], note: "Mulai dari fret 4" },
-  "G#m": { fret: [1, 3, 3, 1, 1, 1], note: "Mulai dari fret 4" },
-  "A#": { fret: [-1, 1, 3, 3, 3, 1], note: "" },
-  "A#m": { fret: [-1, 1, 3, 3, 2, 1], note: "" },
-};
+import { CHORDS } from "../data/chords";
 
 export default function ChordOutput({ html }) {
   const [hoveredChord, setHoveredChord] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
+  // 🔥 regex: support A#, Ab, Amaj7, Am7, A/C#, G#m7b5, dll
   const wrappedHtml = (html || "")
     .replace(
-      /([A-G](?:#|b)?m?(?:maj7|dim7|sus4|sus2|7|6|9|add9|aug|dim)?)/g,
+      /(?<![A-Za-z\/])([A-G](?:#|b)?(?:maj7|m7|m|sus2|sus4|add9|dim7|dim|aug|7|6|9)?(?:\/[A-G](?:#|b)?)?)(?![A-Za-z\/])/g,
       `<span class="chord-span cursor-pointer text-pink-600 font-semibold" data-chord="$1">$1</span>`
     )
     .replace(/\n/g, "<br/>");
@@ -117,7 +90,7 @@ function ChordDiagram({ chord }) {
   return (
     <div>
       {data.note && (
-        <div className="text-[9px] text-center font-mono mb-1 text-gray-700">
+        <div className="text-[12px] text-center font-mono mb-1 text-gray-700">
           {data.note}
         </div>
       )}
