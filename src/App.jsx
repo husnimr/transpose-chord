@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useEffect, useRef, useState } from "react";
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
@@ -6,6 +5,9 @@ import KeySelector from "./components/KeySelector";
 import {
   keys,
   getKeyByName,
+  getNewKey,
+  getChordRoot,
+  chordRegex,
   buildDisplayHtmlFromText,
   transposeHtmlSpans,
 } from "./utils/transposeUtils";
@@ -21,85 +23,70 @@ I found a love.. for me
              C
 Darling just dive right in
               D
-and follow my lead
-               G
-Well I found a girl..
-      Em
-beautiful and sweet
-        C
-I never knew you were the someone
-            D
-waiting for me
-
-      D
-Cause we were just kids
-        G
-when we fell in love
-            Em
-Not knowing what it was
-           C                G   D
-I will not give you up this ti..me
-                 G
-But darling just kiss me slow
-              Em
-your heart is all I own
-            C                   D
-And in your eyes you're holding mine
-
-Reff: 
-       Em   C             G
- Baby, I'm dancing in the dark
-      D              Em
- With you between my arms
- C               G
- Barefoot on the grass
- D                 Em
- Listening to our favourite song
-          C                 G
- When you said you looked a mess
-             D               Em
- I whispered underneath my breath
-         C
- But you heard it
-          G        D          G
- Darling, you look perfect tonight`;
+and follow my lead`;
 
 export default function App() {
   const [textareaValue, setTextareaValue] = useState("");
-  const [displayHtml, setDisplayHtml] = useState(buildDisplayHtmlFromText(defaultSample, "G"));
-  const [currentKey, setCurrentKey] = useState(getKeyByName("G")); // object with name,value,...
-  const htmlRef = useRef(null);
+  const [displayHtml, setDisplayHtml] = useState(
+    buildDisplayHtmlFromText(defaultSample, "G")
+  );
+  const [currentKey, setCurrentKey] = useState(getKeyByName("G"));
 
-  // initialize display with default sample (like plugin's auto-run)
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
     setCurrentKey(getKeyByName("G"));
   }, []);
 
-  // Transpose when a key is selected
   function handleSelectKey(newKeyName) {
     const newKey = getKeyByName(newKeyName);
-    if (!newKey) return;
-    if (currentKey.name === newKey.name) return;
+    if (!newKey || currentKey.name === newKey.name) return;
     const delta = newKey.value - currentKey.value;
-    const newHtml = transposeHtmlSpans(displayHtml, delta);
-    setDisplayHtml(newHtml);
+    setDisplayHtml((prev) => transposeHtmlSpans(prev, delta));
     setCurrentKey(newKey);
   }
 
-  // Action for "Click to Transpose" (convert textarea to interactive display)
+  // 🧠 Auto detect key dari input user
+  function detectFirstChordKey(text) {
+    const match = text.match(chordRegex);
+    if (match && match[0]) {
+      const root = getChordRoot(match[0]);
+      return getKeyByName(root);
+    }
+    return getKeyByName("C"); // default
+  }
+
   function handleTransposeClick() {
     const txt = textareaValue.trim();
     if (!txt) {
       alert("Silakan masukkan teks chord terlebih dahulu!");
       return;
     }
-    const newHtml = buildDisplayHtmlFromText(txt, "C");
+
+    const detectedKey = detectFirstChordKey(txt);
+    setCurrentKey(detectedKey);
+
+    const newHtml = buildDisplayHtmlFromText(txt, detectedKey.name);
     setDisplayHtml(newHtml);
-    setCurrentKey(getKeyByName("C"));
-    // ❌ hapus baris setTextareaValue("") biar input tetap ada
   }
 
+  function handleTransposeUp() {
+    const nextKey = getNewKey(currentKey.name, 1);
+    const delta = nextKey.value - currentKey.value;
+    setDisplayHtml((prev) => transposeHtmlSpans(prev, delta));
+    setCurrentKey(nextKey);
+  }
+
+  function handleTransposeDown() {
+    const prevKey = getNewKey(currentKey.name, -1);
+    const delta = prevKey.value - currentKey.value;
+    setDisplayHtml((prev) => transposeHtmlSpans(prev, delta));
+    setCurrentKey(prevKey);
+  }
+
+  function handleClear() {
+    setTextareaValue("");
+    setDisplayHtml("");
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-pink-50 flex flex-col items-center py-10 px-4">
@@ -108,7 +95,15 @@ export default function App() {
           🎶 Transpose Chord App
         </h1>
 
-        <ChordInput value={textareaValue} onChange={setTextareaValue} onTranspose={handleTransposeClick} />
+        <ChordInput
+          value={textareaValue}
+          onChange={setTextareaValue}
+          onTranspose={handleTransposeClick}
+          onUp={handleTransposeUp}
+          onDown={handleTransposeDown}
+          onClear={handleClear}
+          hasText={!!textareaValue.trim()}
+        />
 
         <KeySelector currentKey={currentKey.name} onSelect={handleSelectKey} />
 
