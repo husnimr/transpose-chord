@@ -14,7 +14,8 @@ import {
 
 const defaultSample = `Demo Chord [Contoh] 
 
-Intro G
+Intro 
+G Em C D G
 
           G          Em
 I found a love.. for me
@@ -70,7 +71,7 @@ export default function App() {
     buildDisplayHtmlFromText(defaultSample, "G")
   );
   const [currentKey, setCurrentKey] = useState(getKeyByName("G"));
-
+  const [activeTab, setActiveTab] = useState("output");
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
     setCurrentKey(getKeyByName("G"));
@@ -131,7 +132,7 @@ export default function App() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-pink-50 flex flex-col items-center py-10 px-4">
       <div className="max-w-3xl w-full bg-white p-6 rounded-2xl shadow-lg">
         <h1 className="text-3xl font-bold text-center text-pink-600 mb-6">
-          🎶 Transpose Chord App
+          🎶 Transpose Chord Guitar App
         </h1>
 
         <ChordInput
@@ -146,7 +147,70 @@ export default function App() {
 
         <KeySelector currentKey={currentKey.name} onSelect={handleSelectKey} />
 
-        <ChordOutput html={displayHtml} />
+        {/* --- Tabs Section --- */}
+        <div className="mt-5">
+          {/* Tab Buttons */}
+          <div className="flex border-b border-gray-200 mb-4">
+            <button
+              className={`px-4 py-2 text-m font-semibold transition ${
+                activeTab === "output"
+                  ? "border-b-2 border-blue-600 text-blue-600"
+                  : "text-gray-500 hover:text-blue-500"
+              }`}
+              onClick={() => setActiveTab("output")}
+            >
+              Result
+            </button>
+            <button
+              className={`px-4 py-2 text-m font-semibold transition ${
+                activeTab === "cara"
+                  ? "border-b-2 border-blue-600 text-blue-600"
+                  : "text-gray-500 hover:text-blue-500"
+              }`}
+              onClick={() => setActiveTab("cara")}
+            >
+              Cara Penggunaan
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          {activeTab === "output" ? (
+            <ChordOutput html={displayHtml} />
+          ) : (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-gray-700 leading-relaxed shadow-sm">
+              {/* <h2 className="text-m font-semibold text-blue-600 mb-3">
+                💡 Cara Menggunakan Fitur Transpose Chord
+              </h2> */}
+              <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base">
+                <li>
+                  <b>Tentukan nada dasar (key)</b> dari lagu yang ingin kamu
+                  ubah. <br />
+                  <span className="italic text-gray-600">
+                    Contoh: Jika pada bagian intro tertulis <b>D E A F#m</b>,
+                    maka pilih atau masukkan chord awal <b>D</b>.
+                  </span>
+                </li>
+                <li>
+                  Masukkan <b>chord dan lirik lagu</b> (jika ada) ke dalam
+                  kolom input di atas.
+                </li>
+                <li>
+                  Klik tombol <b>“Mulai Transpose”</b> untuk menampilkan hasil
+                  perubahan chord.
+                </li>
+                <li>
+                  Ubah nada dengan mudah menggunakan tombol{" "}
+                  <b>“+”</b> atau <b>“–”</b> untuk menaikkan/menurunkan setengah
+                  nada, atau pilih langsung nada dari daftar chord di atas.
+                </li>
+                <li>
+                  Jika ingin memulai ulang, klik tombol <b>“Clear”</b> untuk
+                  menghapus input dan hasil sebelumnya.
+                </li>
+              </ol>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
