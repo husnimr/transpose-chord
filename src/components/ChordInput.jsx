@@ -8,7 +8,7 @@ export default function ChordInput({
   hasText,
 }) {
   return (
-    <div className="TransposeChordHusni bg-blue-50 p-4 rounded-md mb-4">
+    <div className="TransposeChordHusni bg-blue-50 border border-blue-200 rounded-lg p-4">
       <textarea
         className="oldchord-area w-full h-44 border border-blue-300 rounded-md p-3 focus:outline-none resize-vertical"
         placeholder="Tulis lirik & chord atau hanya chordnya saja"
