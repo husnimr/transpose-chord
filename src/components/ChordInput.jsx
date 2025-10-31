@@ -11,7 +11,7 @@ export default function ChordInput({
     <div className="TransposeChordHusni bg-blue-50 p-4 rounded-md mb-4">
       <textarea
         className="oldchord-area w-full h-44 border border-blue-300 rounded-md p-3 focus:outline-none resize-vertical"
-        placeholder="Paste the old chord you want to change here .."
+        placeholder="Tulis lirik & chord atau hanya chordnya saja"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
