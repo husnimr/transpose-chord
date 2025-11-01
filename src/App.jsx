@@ -183,28 +183,28 @@ export default function App() {
               </h2> */}
               <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base">
                 <li>
-                  <b>Tentukan nada dasar (key)</b> dari lagu yang ingin kamu
+                  Tentukan nada dasar (key) dari lagu yang ingin kamu
                   ubah. <br />
-                  <span className="italic text-gray-600">
+                  <span className="text-gray-600">
                     Contoh: Jika pada bagian intro tertulis <b>D E A F#m</b>,
                     maka pilih atau masukkan chord awal <b>D</b>.
                   </span>
                 </li>
                 <li>
-                  Masukkan <b>chord dan lirik lagu</b> (jika ada) ke dalam
+                  Masukkan chord dan lirik lagu (jika ada) ke dalam
                   kolom input di atas.
                 </li>
                 <li>
-                  Klik tombol <b>“Mulai Transpose”</b> untuk menampilkan hasil
+                  Klik tombol <kbd>Transpose</kbd> untuk menampilkan hasil
                   perubahan chord.
                 </li>
                 <li>
                   Ubah nada dengan mudah menggunakan tombol{" "}
-                  <b>“+”</b> atau <b>“–”</b> untuk menaikkan/menurunkan setengah
+                  <kbd>+</kbd> atau <kbd>–</kbd> untuk menaikkan/menurunkan setengah
                   nada, atau pilih langsung nada dari daftar chord di atas.
                 </li>
                 <li>
-                  Jika ingin memulai ulang, klik tombol <b>“Clear”</b> untuk
+                  Jika ingin memulai ulang, klik tombol <kbd>Clear</kbd> untuk
                   menghapus input dan hasil sebelumnya.
                 </li>
               </ol>
