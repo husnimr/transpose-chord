@@ -1,3 +1,4 @@
+import { FiPlus, FiMinus } from "react-icons/fi";
 export default function ChordInput({
   value,
   onChange,
@@ -22,11 +23,11 @@ export default function ChordInput({
             ? "bg-gray-900 border-gray-600 text-gray-100 placeholder-gray-500"
             : "bg-white border-blue-300 text-gray-800 placeholder-gray-400"
         }`}
-        placeholder={`G Em C D
+        placeholder={`G  Em  C  D
 
-  G          Em
+                  G            Em
   I found a love.. for me
-              C
+                     C
   Darling just dive right in..`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -53,7 +54,7 @@ export default function ChordInput({
                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
           >
-            –
+            <FiMinus className="text-lg" />
           </button>
 
           <button
@@ -67,7 +68,7 @@ export default function ChordInput({
                 : "bg-gray-300 text-gray-600 cursor-not-allowed"
             }`}
           >
-            +
+            <FiPlus className="text-lg" />
           </button>
         </div>
 
