@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { FiMoon, FiSun } from "react-icons/fi"; 
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
 import KeySelector from "./components/KeySelector";
 import {
-  keys,
   getKeyByName,
   getNewKey,
   getChordRoot,
@@ -45,25 +45,7 @@ But darling just kiss me slow
               Em
 your heart is all I own
             C                   D
-And in your eyes you're holding mine
-
-Reff: 
-       Em   C             G
- Baby, I'm dancing in the dark
-      D              Em
- With you between my arms
- C               G
- Barefoot on the grass
- D                 Em
- Listening to our favourite song
-          C                 G
- When you said you looked a mess
-             D               Em
- I whispered underneath my breath
-         C
- But you heard it
-          G        D          G
- Darling, you look perfect tonight`;
+And in your eyes you're holding mine`;
 
 export default function App() {
   const [textareaValue, setTextareaValue] = useState("");
@@ -72,6 +54,8 @@ export default function App() {
   );
   const [currentKey, setCurrentKey] = useState(getKeyByName("G"));
   const [activeTab, setActiveTab] = useState("output");
+  const [darkMode, setDarkMode] = useState(false);
+
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
     setCurrentKey(getKeyByName("G"));
@@ -85,14 +69,13 @@ export default function App() {
     setCurrentKey(newKey);
   }
 
-  // 🧠 Auto detect key dari input user
   function detectFirstChordKey(text) {
     const match = text.match(chordRegex);
     if (match && match[0]) {
       const root = getChordRoot(match[0]);
       return getKeyByName(root);
     }
-    return getKeyByName("C"); // default
+    return getKeyByName("C");
   }
 
   function handleTransposeClick() {
@@ -104,7 +87,6 @@ export default function App() {
 
     const detectedKey = detectFirstChordKey(txt);
     setCurrentKey(detectedKey);
-
     const newHtml = buildDisplayHtmlFromText(txt, detectedKey.name);
     setDisplayHtml(newHtml);
   }
@@ -129,12 +111,49 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-pink-50 flex flex-col items-center py-10 px-4">
-      <div className="max-w-3xl w-full bg-white p-6 rounded-2xl shadow-lg">
-        <h1 className="text-3xl font-bold text-center text-pink-600 mb-6">
-          🎶 Transpose Chord Guitar App
-        </h1>
+    <div
+      className={`min-h-screen transition-colors duration-500 ${
+        darkMode
+          ? "bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100"
+          : "bg-gradient-to-br from-blue-50 to-pink-50 text-gray-800"
+      } flex flex-col items-center py-10 px-4`}
+    >
+      <div
+        className={`max-w-3xl w-full p-6 rounded-2xl shadow-lg transition-colors duration-500 ${
+          darkMode ? "bg-gray-900 border border-gray-700" : "bg-white"
+        }`}
+      >
+        {/* Header + Dark Mode Toggle */}
+        <div className="flex justify-between items-center mb-6">
+          <h1
+            className={`text-3xl font-bold text-center ${
+              darkMode ? "text-pink-400" : "text-pink-600"
+            }`}
+          >
+            🎶 Transpose Chord Guitar App
+          </h1>
 
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300 ${
+              darkMode
+                ? "bg-gray-700 hover:bg-gray-600"
+                : "bg-blue-100 hover:bg-blue-200"
+            }`}
+          >
+            {darkMode ? (
+              <>
+                <FiSun className="text-yellow-300 text-lg" />
+              </>
+            ) : (
+              <>
+                <FiMoon className="text-gray-600 text-lg" />
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Input & Key Selector */}
         <ChordInput
           value={textareaValue}
           onChange={setTextareaValue}
@@ -143,18 +162,27 @@ export default function App() {
           onDown={handleTransposeDown}
           onClear={handleClear}
           hasText={!!textareaValue.trim()}
+          darkMode={darkMode} 
         />
 
         <KeySelector currentKey={currentKey.name} onSelect={handleSelectKey} />
 
-        {/* --- Tabs Section --- */}
+        {/* Tabs Section */}
         <div className="mt-5">
           {/* Tab Buttons */}
-          <div className="flex border-b border-gray-200 mb-4">
+          <div
+            className={`flex border-b mb-4 ${
+              darkMode ? "border-gray-700" : "border-gray-200"
+            }`}
+          >
             <button
               className={`px-4 py-2 text-m font-semibold transition ${
                 activeTab === "output"
-                  ? "border-b-2 border-blue-600 text-blue-600"
+                  ? darkMode
+                    ? "border-b-2 border-pink-400 text-pink-400"
+                    : "border-b-2 border-blue-600 text-blue-600"
+                  : darkMode
+                  ? "text-gray-400 hover:text-pink-400"
                   : "text-gray-500 hover:text-blue-500"
               }`}
               onClick={() => setActiveTab("output")}
@@ -164,7 +192,11 @@ export default function App() {
             <button
               className={`px-4 py-2 text-m font-semibold transition ${
                 activeTab === "cara"
-                  ? "border-b-2 border-blue-600 text-blue-600"
+                  ? darkMode
+                    ? "border-b-2 border-pink-400 text-pink-400"
+                    : "border-b-2 border-blue-600 text-blue-600"
+                  : darkMode
+                  ? "text-gray-400 hover:text-pink-400"
                   : "text-gray-500 hover:text-blue-500"
               }`}
               onClick={() => setActiveTab("cara")}
@@ -175,37 +207,43 @@ export default function App() {
 
           {/* Tab Content */}
           {activeTab === "output" ? (
-            <ChordOutput html={displayHtml} />
+            <ChordOutput 
+            html={displayHtml} 
+            darkMode={darkMode}
+            />
           ) : (
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-gray-700 leading-relaxed shadow-sm">
-              {/* <h2 className="text-m font-semibold text-blue-600 mb-3">
-                💡 Cara Menggunakan Fitur Transpose Chord
-              </h2> */}
-              <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base">
+            <div
+              className={`rounded-lg p-4 leading-relaxed shadow-sm transition-colors duration-300 ${
+                darkMode
+                  ? "bg-gray-800 border border-gray-700 text-gray-200"
+                  : "bg-blue-50 border border-blue-200 text-gray-700"
+              }`}
+            >
+              <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base transition-colors duration-300">
                 <li>
-                  Tentukan nada dasar (key) dari lagu yang ingin kamu
-                  ubah. <br />
-                  <span className="text-gray-600">
-                    Contoh: Jika pada bagian intro tertulis <b>D E A F#m</b>,
-                    maka pilih atau masukkan chord awal <b>D</b>.
-                  </span>
+                  Tentukan nada dasar (key) dari lagu yang ingin kamu ubah.{" "}
+                  <br />
+                    <span>
+                      Contoh: Jika pada bagian intro tertulis <b>D E A F#m</b>,
+                      maka pilih atau masukkan chord awal <b>D</b>.
+                    </span>
                 </li>
                 <li>
-                  Masukkan chord dan lirik lagu (jika ada) ke dalam
-                  kolom input di atas.
+                  Masukkan chord dan lirik lagu (jika ada) ke dalam kolom input
+                  di atas.
                 </li>
                 <li>
                   Klik tombol <kbd>Transpose</kbd> untuk menampilkan hasil
                   perubahan chord.
                 </li>
                 <li>
-                  Ubah nada dengan mudah menggunakan tombol{" "}
-                  <kbd>+</kbd> atau <kbd>–</kbd> untuk menaikkan/menurunkan setengah
-                  nada, atau pilih langsung nada dari daftar chord di atas.
+                  Gunakan tombol <kbd>+</kbd> atau <kbd>–</kbd> untuk menaikkan
+                  atau menurunkan setengah nada, atau pilih langsung dari daftar
+                  chord di atas.
                 </li>
                 <li>
-                  Jika ingin memulai ulang, klik tombol <kbd>Clear</kbd> untuk
-                  menghapus input dan hasil sebelumnya.
+                  Klik tombol <kbd>Clear</kbd> untuk menghapus input dan hasil
+                  sebelumnya.
                 </li>
               </ol>
             </div>
