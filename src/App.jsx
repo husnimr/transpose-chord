@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
-import { FiMoon, FiSun } from "react-icons/fi"; 
+import { useEffect, useState, useRef } from "react";
+import { FiMoon, FiSun } from "react-icons/fi";
+import { MdOutlineInstallMobile } from "react-icons/md";
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
 import KeySelector from "./components/KeySelector";
@@ -59,6 +60,7 @@ export default function App() {
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
     setCurrentKey(getKeyByName("G"));
+    clearInterval(scrollInterval.current);
   }, []);
 
   function handleSelectKey(newKeyName) {
@@ -110,6 +112,31 @@ export default function App() {
     setDisplayHtml("");
   }
 
+  const [showAutoScroll, setShowAutoScroll] = useState(false);
+  const [scrolling, setScrolling] = useState(false);
+  const [speed, setSpeed] = useState(0); // 0 = stop
+  const scrollInterval = useRef(null);
+  const speedIntervals = [0, 80, 60, 40, 25, 15]; // sebelumnya 400-30
+
+  // mulai autoscroll
+  const startScroll = (level) => {
+    stopScroll();
+    setSpeed(level);
+    setScrolling(true);
+
+    scrollInterval.current = setInterval(() => {
+      window.scrollBy(0, 1); // makin tinggi level makin cepat scroll-nya (0, 1.5 + level * 0.5);
+    }, speedIntervals[level]);
+  };
+
+  // fungsi berhenti
+  const stopScroll = () => {
+    clearInterval(scrollInterval.current);
+    setScrolling(false);
+    setSpeed(0);
+  };
+
+
   return (
     <div
       className={`min-h-screen transition-colors duration-500 ${
@@ -133,25 +160,74 @@ export default function App() {
             🎶 Transpose Chord Guitar App
           </h1>
 
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`px-3 py-2 rounded-lg text-sm font-semibold transition-colors duration-300 ${
+          <div className="flex gap-2">
+            {/* Tombol Dark Mode */}
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-1 transition-colors duration-300 ${
+                darkMode
+                  ? "bg-gray-700 hover:bg-gray-600 text-yellow-300"
+                  : "bg-blue-100 hover:bg-blue-200 text-gray-700"
+              }`}
+            >
+              {darkMode ? 
+              <FiSun className="text-yellow-300 text-lg" /> : 
+              <FiMoon className="text-blue-600 text-lg" />}
+            </button>
+
+            {/* Tombol Autoscroll */}
+            <button
+              onClick={() => setShowAutoScroll(!showAutoScroll)}
+              className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-1 transition-colors duration-300 ${
+                darkMode
+                  ? "bg-gray-700 hover:bg-gray-600 text-blue-300"
+                  : "bg-blue-100 hover:bg-blue-200 text-blue-700"
+              }`}
+            >
+              {darkMode ? 
+                <MdOutlineInstallMobile className="text-yellow-600 text-lg" /> :
+                <MdOutlineInstallMobile className="text-blue-600 text-lg" />}
+            </button>
+          </div>
+        </div>
+
+        {/* AutoScroll Floating Panel */}
+        {showAutoScroll && (
+          <div
+            className={`fixed right-5 bottom-32 rounded-lg shadow-lg z-50 border transition-colors duration-300 ${
               darkMode
-                ? "bg-gray-700 hover:bg-gray-600"
-                : "bg-blue-100 hover:bg-blue-200"
+                ? "bg-gray-900 border-gray-700 text-gray-200"
+                : "bg-white border-gray-200 text-gray-800"
             }`}
           >
-            {darkMode ? (
-              <>
-                <FiSun className="text-yellow-300 text-lg" />
-              </>
-            ) : (
-              <>
-                <FiMoon className="text-gray-600 text-lg" />
-              </>
-            )}
-          </button>
-        </div>
+            <div className="p-2 w-24 flex flex-col items-center">
+              <p className="text-xs font-semibold mb-2">AutoScroll</p>
+
+              {[1, 2, 3, 4, 5].map((lvl) => (
+                <button
+                  key={lvl}
+                  onClick={() => startScroll(lvl)}
+                  className={`w-full py-1 my-1 text-xs rounded transition-colors duration-200 ${
+                    speed === lvl
+                      ? "bg-red-500 text-white"
+                      : darkMode
+                      ? "bg-gray-700 hover:bg-gray-600 text-gray-300"
+                      : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                  }`}
+                >
+                  Speed {lvl}x
+                </button>
+              ))}
+
+              <button
+                onClick={stopScroll}
+                className="w-full mt-2 py-1 text-xs rounded bg-red-600 text-white hover:bg-red-700"
+              >
+                Stop
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Input & Key Selector */}
         <ChordInput
