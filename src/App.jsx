@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { FiMoon, FiSun, FiType, FiPlus, FiMinus, FiRotateCcw } from "react-icons/fi";
 import { MdOutlineInstallMobile } from "react-icons/md";
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
@@ -56,6 +56,8 @@ export default function App() {
   const [currentKey, setCurrentKey] = useState(getKeyByName("G"));
   const [activeTab, setActiveTab] = useState("output");
   const [darkMode, setDarkMode] = useState(false);
+  const [fontSize, setFontSize] = useState(14);
+  const [showFontMenu, setShowFontMenu] = useState(false);
 
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
@@ -161,6 +163,68 @@ export default function App() {
           </h1>
 
           <div className="flex gap-2">
+            {/* Font Control Button */}
+            <div className="relative">
+              <button
+                onClick={() => setShowFontMenu(!showFontMenu)}
+                className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-1 transition-colors duration-300 ${
+                  darkMode
+                    ? "bg-gray-700 hover:bg-gray-600 text-blue-300"
+                    : "bg-blue-100 hover:bg-blue-200 text-gray-700"
+                }`}
+              >
+                <FiType className="text-lg" />
+              </button>
+
+              {/* Dropdown */}
+{showFontMenu && (
+  <div
+    className={`absolute right-0 mt-2 p-2 rounded-lg shadow-lg z-10 flex gap-2 ${
+      darkMode
+        ? "bg-gray-800 border border-gray-700"
+        : "bg-white border border-gray-200"
+    }`}
+  >
+    <button
+      onClick={() => setFontSize((s) => Math.max(10, s - 1))}
+      className={`p-2 rounded transition-colors ${
+        darkMode
+          ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+      }`}
+      title="Perkecil Font"
+    >
+      <FiMinus size={16} />
+    </button>
+
+    <button
+      onClick={() => setFontSize((s) => Math.min(24, s + 1))}
+      className={`p-2 rounded transition-colors ${
+        darkMode
+          ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+      }`}
+      title="Perbesar Font"
+    >
+      <FiPlus size={16} />
+    </button>
+
+    <button
+      onClick={() => setFontSize(14)}
+      className={`p-2 rounded transition-colors ${
+        darkMode
+          ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+      }`}
+      title="Reset Font"
+    >
+      <FiRotateCcw size={16} />
+    </button>
+  </div>
+)}
+
+            </div>
+
             {/* Tombol Dark Mode */}
             <button
               onClick={() => setDarkMode(!darkMode)}
@@ -286,6 +350,7 @@ export default function App() {
             <ChordOutput 
             html={displayHtml} 
             darkMode={darkMode}
+            fontSize={fontSize}
             />
           ) : (
             <div
