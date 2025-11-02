@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CHORDS } from "../data/chords";
 
-export default function ChordOutput({ html, darkMode, fontSize }) {
+export default function ChordOutput({ html, darkMode, fontSize = 14, isBold = false }) {
   const [hoveredChord, setHoveredChord] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
@@ -41,7 +41,10 @@ export default function ChordOutput({ html, darkMode, fontSize }) {
         }`}
         onMouseOver={handleMouseEnter}
         onMouseOut={handleMouseLeave}
-        style={{ fontSize: `${fontSize}px` }}
+        style={{ 
+          fontSize: `${fontSize}px`,
+          fontWeight: isBold ? 'bold' : 'normal',
+        }}
         dangerouslySetInnerHTML={{ __html: wrappedHtml }}
       />
 

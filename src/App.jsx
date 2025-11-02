@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { FiMoon, FiSun, FiBold } from "react-icons/fi";
-import { MdOutlineInstallMobile, MdOutlineTextIncrease, MdOutlineTextDecrease   } from "react-icons/md";
+import { FiMoon, FiSun } from "react-icons/fi";
+import { MdOutlineInstallMobile, MdOutlineTextIncrease, MdOutlineTextDecrease } from "react-icons/md";
+import { GoBold } from "react-icons/go";
 import { RiFontSize, RiResetRightFill } from "react-icons/ri";
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
@@ -59,6 +60,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [fontSize, setFontSize] = useState(14);
   const [showFontMenu, setShowFontMenu] = useState(false);
+  const [isBold, setIsBold] = useState(false);
 
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
@@ -188,6 +190,22 @@ export default function App() {
                   }`}
                 >
                   <button
+                    onClick={() => setIsBold((prev) => !prev)}
+                    className={`p-2 rounded transition-colors ${
+                      isBold
+                        ? darkMode
+                          ? "bg-emerald-600 text-white hover:bg-emerald-500"
+                          : "bg-emerald-500 text-white hover:bg-emerald-400"
+                        : darkMode
+                        ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                    }`}
+                    title="Tebalkan huruf"
+                  >
+                    <GoBold  size={16} />
+                  </button>
+
+                  <button
                     onClick={() => setFontSize((s) => Math.max(10, s - 1))}
                     className={`p-2 rounded transition-colors ${
                       darkMode
@@ -212,7 +230,10 @@ export default function App() {
                   </button>
 
                   <button
-                    onClick={() => setFontSize(14)}
+                    onClick={() => {
+                      setFontSize(14)
+                      setIsBold(false); 
+                    }}
                     className={`p-2 rounded transition-colors ${
                       darkMode
                         ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
@@ -249,6 +270,7 @@ export default function App() {
                   ? "bg-gray-700 hover:bg-gray-600 text-blue-300"
                   : "bg-blue-100 hover:bg-blue-200 text-blue-700"
               }`}
+              title="AutoScroll"
             >
               {darkMode ? 
                 <MdOutlineInstallMobile className="text-yellow-600 text-lg" /> :
@@ -353,6 +375,7 @@ export default function App() {
             html={displayHtml} 
             darkMode={darkMode}
             fontSize={fontSize}
+            isBold={isBold}
             />
           ) : (
             <div
