@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
-import { FiMoon, FiSun, FiType, FiPlus, FiMinus, FiRotateCcw } from "react-icons/fi";
-import { MdOutlineInstallMobile } from "react-icons/md";
+import { FiMoon, FiSun, FiBold } from "react-icons/fi";
+import { MdOutlineInstallMobile, MdOutlineTextIncrease, MdOutlineTextDecrease   } from "react-icons/md";
+import { RiFontSize, RiResetRightFill } from "react-icons/ri";
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
 import KeySelector from "./components/KeySelector";
@@ -170,58 +171,59 @@ export default function App() {
                 className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-1 transition-colors duration-300 ${
                   darkMode
                     ? "bg-gray-700 hover:bg-gray-600 text-blue-300"
-                    : "bg-blue-100 hover:bg-blue-200 text-gray-700"
+                    : "bg-blue-100 hover:bg-blue-200 text-blue-700"
                 }`}
+                title="Ukuran Huruf"
               >
-                <FiType className="text-lg" />
+                <RiFontSize className="text-lg" />
               </button>
 
               {/* Dropdown */}
-{showFontMenu && (
-  <div
-    className={`absolute right-0 mt-2 p-2 rounded-lg shadow-lg z-10 flex gap-2 ${
-      darkMode
-        ? "bg-gray-800 border border-gray-700"
-        : "bg-white border border-gray-200"
-    }`}
-  >
-    <button
-      onClick={() => setFontSize((s) => Math.max(10, s - 1))}
-      className={`p-2 rounded transition-colors ${
-        darkMode
-          ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
-          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-      }`}
-      title="Perkecil Font"
-    >
-      <FiMinus size={16} />
-    </button>
+              {showFontMenu && (
+                <div
+                  className={`absolute right-0 mt-2 p-2 rounded-lg shadow-lg z-10 flex gap-2 ${
+                    darkMode
+                      ? "bg-gray-800 border border-gray-700"
+                      : "bg-white border border-gray-200"
+                  }`}
+                >
+                  <button
+                    onClick={() => setFontSize((s) => Math.max(10, s - 1))}
+                    className={`p-2 rounded transition-colors ${
+                      darkMode
+                        ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                    }`}
+                    title="Perkecil huruf"
+                  >
+                    <MdOutlineTextDecrease size={16} />
+                  </button>
 
-    <button
-      onClick={() => setFontSize((s) => Math.min(24, s + 1))}
-      className={`p-2 rounded transition-colors ${
-        darkMode
-          ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
-          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-      }`}
-      title="Perbesar Font"
-    >
-      <FiPlus size={16} />
-    </button>
+                  <button
+                    onClick={() => setFontSize((s) => Math.min(24, s + 1))}
+                    className={`p-2 rounded transition-colors ${
+                      darkMode
+                        ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                    }`}
+                    title="Perbesar huruf"
+                  >
+                    <MdOutlineTextIncrease size={16} />
+                  </button>
 
-    <button
-      onClick={() => setFontSize(14)}
-      className={`p-2 rounded transition-colors ${
-        darkMode
-          ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
-          : "bg-gray-200 hover:bg-gray-300 text-gray-800"
-      }`}
-      title="Reset Font"
-    >
-      <FiRotateCcw size={16} />
-    </button>
-  </div>
-)}
+                  <button
+                    onClick={() => setFontSize(14)}
+                    className={`p-2 rounded transition-colors ${
+                      darkMode
+                        ? "bg-gray-700 hover:bg-gray-600 text-gray-200"
+                        : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                    }`}
+                    title="Reset ukuran huruf"
+                  >
+                    <RiResetRightFill size={16} />
+                  </button>
+                </div>
+              )}
 
             </div>
 
