@@ -251,9 +251,10 @@ export default function App() {
             {/* Tombol Dark Mode */}
             <button
               onClick={() => setDarkMode(!darkMode)}
+              title={darkMode ? "Light Mode" : "Dark Mode"}
               className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-1 transition-colors duration-300 ${
                 darkMode
-                  ? "bg-gray-700 hover:bg-gray-600 text-yellow-300"
+                  ? "bg-gray-700 hover:bg-gray-600 text-yellow-300" 
                   : "bg-blue-100 hover:bg-blue-200 text-gray-700"
               }`}
             >
