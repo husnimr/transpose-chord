@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
 import { MdOutlineInstallMobile, MdOutlineTextIncrease, MdOutlineTextDecrease } from "react-icons/md";
 import { GoBold } from "react-icons/go";
 import { RiFontSize, RiResetRightFill } from "react-icons/ri";
@@ -416,6 +417,44 @@ export default function App() {
             </div>
           )}
         </div>
+
+        {/* Footer */}
+        <div
+          className={`mt-8 pt-4 border-t text-sm flex flex-col sm:flex-row justify-center items-center gap-4 ${
+            darkMode ? "border-gray-700 text-gray-400" : "border-gray-200 text-gray-600"
+          }`}
+        >
+          <a
+            href="https://instagram.com/husnimbrrk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-pink-500 transition-colors"
+          >
+            <FaInstagram className="text-lg" />
+            husnimbrrk
+          </a>
+
+          <a
+            href="https://www.linkedin.com/in/husnimubarokramadhan/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-blue-500 transition-colors"
+          >
+            <FaLinkedin className="text-lg" />
+            Husni Mubarok Ramadhan
+          </a>
+
+          <a
+            href="https://github.com/husnimr/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:text-gray-900 dark:hover:text-purple-400 transition-colors"
+          >
+            <FaGithub className="text-lg" />
+            husnimr
+          </a>
+        </div>
+
       </div>
     </div>
   );

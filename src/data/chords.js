@@ -7,7 +7,6 @@ export const CHORDS = {
   "A#m": { fret: [-1, 1, 3, 3, 2, 1], note: "" },
 
   B: { fret: [-1, 2, 4, 4, 4, 2], note: "" },
-  B7: { fret: [-1, 2, 1, 2, 0, 2], note: "" },
   Bm: { fret: [-1, 2, 4, 4, 3, 2], note: "" },
 
   C: { fret: [-1, 3, 2, 0, 1, 0], note: "" },
@@ -122,7 +121,7 @@ export const CHORDS = {
   "A/G": { fret: [-1, 2, 2, 2, 3, 0], note: "" },
   'B/C': { fret: [-1, 3, 4, 4, 4, 2], note: "" },
   "B/D#": { fret: [-1, 2, 4, 4, 4, 6], note: "" },
-  "B/D#": { fret: [-1, 6, 4, 4, 4, 2], note: "" },
+  "B/D": { fret: [-1, 6, 4, 4, 4, 2], note: "" },
   "B/Eb": { fret: [-1, 6, 4, 4, 4, 3], note: "" },
   "B/F#": { fret: [-1, 2, 4, 4, 4, 7], note: "" },
   "C/B": { fret: [-1, 2, 0, 0, 1, 0], note: "" },
