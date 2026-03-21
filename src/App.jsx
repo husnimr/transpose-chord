@@ -166,7 +166,7 @@ export default function App() {
                 darkMode ? "text-pink-400" : "text-pink-600"
               }`}
             >
-              🎶 Transpose Chord & Tuner
+              🎶 Transpose Chord
             </h1>
             
             {/* View Mode Toggle */}

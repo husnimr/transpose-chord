@@ -11,12 +11,22 @@ import {
 } from '../utils/pitchDetection';
 import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 
+const getMedian = (arr) => {
+  if (arr.length === 0) return 0;
+  const sorted = [...arr].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+};
+
 export default function GuitarTuner({ darkMode }) {
   const [isListening, setIsListening] = useState(false);
   const isListeningRef = useRef(false);
   const [pitch, setPitch] = useState(null);
   const [note, setNote] = useState(null);
   const [cents, setCents] = useState(0);
+
+  const pitchHistoryRef = useRef([]);
+  const smoothedCentsRef = useRef(0);
 
   const [tuningMode, setTuningMode] = useState('auto'); // 'auto' | 'manual'
   const [targetString, setTargetString] = useState(standardTuning[0]);
@@ -70,6 +80,8 @@ export default function GuitarTuner({ darkMode }) {
   const stopListening = () => {
     setIsListening(false);
     isListeningRef.current = false;
+    pitchHistoryRef.current = [];
+    smoothedCentsRef.current = 0;
     setPitch(null);
     setNote(null);
     setCents(0);
@@ -96,20 +108,34 @@ export default function GuitarTuner({ darkMode }) {
     const ac = autoCorrelate(buffer, audioContextRef.current.sampleRate);
     
     if (ac !== -1) {
-      const freq = ac;
-      setPitch(freq);
+      pitchHistoryRef.current.push(ac);
+      if (pitchHistoryRef.current.length > 7) {
+        pitchHistoryRef.current.shift();
+      }
+      
+      const medianPitch = getMedian(pitchHistoryRef.current);
+      setPitch(medianPitch);
+
+      let targetCents = 0;
+      let targetNoteName = '';
 
       if (tuningModeRef.current === 'auto') {
-        const closest = getClosestStandardString(freq);
-        const centDiff = getCentsOffTarget(freq, closest.hz);
-        setNote(closest.note);
-        setCents(centDiff);
+        const closest = getClosestStandardString(medianPitch);
+        targetCents = getCentsOffTarget(medianPitch, closest.hz);
+        targetNoteName = closest.note;
       } else {
         const target = targetStringRef.current;
-        const centDiff = getCentsOffTarget(freq, target.hz);
-        setNote(target.note);
-        setCents(centDiff);
+        targetCents = getCentsOffTarget(medianPitch, target.hz);
+        targetNoteName = target.note;
       }
+
+      // Smooth the cents visually using Exponential Moving Average
+      smoothedCentsRef.current = smoothedCentsRef.current * 0.85 + targetCents * 0.15;
+
+      setNote(targetNoteName);
+      setCents(smoothedCentsRef.current);
+    } else {
+      pitchHistoryRef.current = [];
     }
 
     rafIdRef.current = requestAnimationFrame(updatePitch);
@@ -223,7 +249,7 @@ export default function GuitarTuner({ darkMode }) {
           style={{ backgroundColor: isListening ? 'transparent' : 'gray' }}
           initial={{ rotate: 0 }}
           animate={{ rotate: isListening ? needleRotation : 0 }}
-          transition={{ type: "spring", stiffness: 80, damping: 20 }}
+          transition={{ type: "spring", stiffness: 45, damping: 25, mass: 1.5 }}
         >
            <div className={`w-full h-full rounded-t-full ${isListening ? getIndicatorColor() : 'bg-gray-400'} transition-colors duration-300`} />
         </motion.div>
