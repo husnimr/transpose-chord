@@ -13,6 +13,7 @@ import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
 
 export default function GuitarTuner({ darkMode }) {
   const [isListening, setIsListening] = useState(false);
+  const isListeningRef = useRef(false);
   const [pitch, setPitch] = useState(null);
   const [note, setNote] = useState(null);
   const [cents, setCents] = useState(0);
@@ -58,6 +59,7 @@ export default function GuitarTuner({ darkMode }) {
       source.connect(analyserRef.current);
 
       setIsListening(true);
+      isListeningRef.current = true;
       updatePitch();
     } catch (err) {
       console.error('Error accessing microphone:', err);
@@ -67,6 +69,7 @@ export default function GuitarTuner({ darkMode }) {
 
   const stopListening = () => {
     setIsListening(false);
+    isListeningRef.current = false;
     setPitch(null);
     setNote(null);
     setCents(0);
@@ -80,10 +83,11 @@ export default function GuitarTuner({ darkMode }) {
     if (audioContextRef.current) {
       audioContextRef.current.close().catch(() => {});
     }
+    analyserRef.current = null;
   };
 
   const updatePitch = () => {
-    if (!analyserRef.current || !isListening) return;
+    if (!analyserRef.current || !isListeningRef.current) return;
 
     const buffer = new Float32Array(analyserRef.current.fftSize);
     analyserRef.current.getFloatTimeDomainData(buffer);
@@ -132,30 +136,30 @@ export default function GuitarTuner({ darkMode }) {
       darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-gray-50 shadow-sm border border-gray-200'
     }`}>
       
-      {/* Tuning Mode Toggle */}
-      <div className={`flex p-1 rounded-xl mb-4 w-max ${
-        darkMode ? "bg-gray-700" : "bg-gray-200"
-      }`}>
-        <button
-          onClick={() => handleModeChange('auto')}
-          className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
-            tuningMode === 'auto'
-              ? darkMode ? "bg-gray-600 text-pink-400 shadow" : "bg-white text-blue-700 shadow"
-              : darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"
-          }`}
-        >
-          Otomatis
-        </button>
-        <button
-          onClick={() => handleModeChange('manual')}
-          className={`px-6 py-2 rounded-lg text-sm font-bold transition-all ${
-            tuningMode === 'manual'
-              ? darkMode ? "bg-gray-600 text-pink-400 shadow" : "bg-white text-blue-700 shadow"
-              : darkMode ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"
-          }`}
-        >
-          Manual
-        </button>
+      {/* Tuning Mode Toggle (Switch) */}
+      <div className="flex justify-between items-center w-full max-w-sm mb-4 px-2">
+        <span className={`font-bold text-sm ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Tuning Mode</span>
+        <label className="flex items-center cursor-pointer gap-3">
+          <span className={`font-bold text-sm select-none ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            Auto
+          </span>
+          <div className="relative">
+            <input 
+              type="checkbox" 
+              className="sr-only" 
+              checked={tuningMode === 'auto'} 
+              onChange={(e) => handleModeChange(e.target.checked ? 'auto' : 'manual')} 
+            />
+            <div className={`block w-12 h-6 rounded-full transition-colors ${
+              tuningMode === 'auto' 
+                ? 'bg-blue-500' 
+                : darkMode ? 'bg-gray-600' : 'bg-gray-300'
+            }`}></div>
+            <div className={`absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 ease-in-out ${
+              tuningMode === 'auto' ? 'translate-x-6' : 'translate-x-0'
+            }`}></div>
+          </div>
+        </label>
       </div>
 
       <div className="mb-6 flex flex-col items-center w-full">
@@ -236,10 +240,22 @@ export default function GuitarTuner({ darkMode }) {
 
       {isListening ? (
         <div className="text-center w-full min-h-[140px]">
-          <div className="flex flex-col items-center justify-center">
-            <h2 className={`text-7xl font-black ${getTuningColor()} transition-colors duration-200`}>
-              {note || '--'}
-            </h2>
+          <div className="flex items-center justify-center gap-4">
+            {/* Flat indicator */}
+            <div className={`text-5xl font-black transition-opacity duration-200 ${note && cents < -10 ? 'text-red-500 opacity-100 drop-shadow-md' : 'text-gray-300 opacity-20 dark:text-gray-600'}`}>
+               ◀
+            </div>
+
+            <div className="flex flex-col items-center justify-center w-32">
+              <h2 className={`text-7xl font-black ${getTuningColor()} transition-colors duration-200`}>
+                {note || '--'}
+              </h2>
+            </div>
+            
+            {/* Sharp indicator */}
+            <div className={`text-5xl font-black transition-opacity duration-200 ${note && cents > 10 ? 'text-red-500 opacity-100 drop-shadow-md' : 'text-gray-300 opacity-20 dark:text-gray-600'}`}>
+               ▶
+            </div>
           </div>
           <div className={`mt-3 font-mono text-xl ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
             {pitch ? `${Math.round(pitch)} Hz` : 'Mendengarkan...'}

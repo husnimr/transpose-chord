@@ -33,7 +33,7 @@ export function autoCorrelate(buf, sampleRate) {
     rms += val * val;
   }
   rms = Math.sqrt(rms / buf.length);
-  if (rms < 0.01)
+  if (rms < 0.0001) // Extremely low threshold to ensure it picks up noise
     return -1;
 
   let r1 = 0, r2 = buf.length - 1, thres = 0.2;
