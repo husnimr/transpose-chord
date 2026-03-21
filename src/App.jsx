@@ -7,6 +7,7 @@ import { RiFontSize, RiResetRightFill } from "react-icons/ri";
 import ChordInput from "./components/ChordInput";
 import ChordOutput from "./components/ChordOutput";
 import KeySelector from "./components/KeySelector";
+import GuitarTuner from "./components/GuitarTuner";
 import {
   getKeyByName,
   getNewKey,
@@ -62,6 +63,7 @@ export default function App() {
   const [fontSize, setFontSize] = useState(14);
   const [showFontMenu, setShowFontMenu] = useState(false);
   const [isBold, setIsBold] = useState(false);
+  const [viewMode, setViewMode] = useState("transposer");
 
   useEffect(() => {
     setDisplayHtml(buildDisplayHtmlFromText(defaultSample, "G"));
@@ -157,14 +159,42 @@ export default function App() {
         }`}
       >
         {/* Header + Dark Mode Toggle */}
-        <div className="flex justify-between items-center mb-6">
-          <h1
-            className={`text-3xl font-bold text-center ${
-              darkMode ? "text-pink-400" : "text-pink-600"
-            }`}
-          >
-            🎶 Transpose Chord Guitar App
-          </h1>
+        <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+          <div className="flex flex-col items-center md:items-start gap-3">
+            <h1
+              className={`text-3xl font-bold text-center md:text-left ${
+                darkMode ? "text-pink-400" : "text-pink-600"
+              }`}
+            >
+              🎶 Transpose Chord & Tuner
+            </h1>
+            
+            {/* View Mode Toggle */}
+            <div className={`flex p-1 rounded-xl w-max ${
+              darkMode ? "bg-gray-800" : "bg-blue-100"
+            }`}>
+              <button
+                onClick={() => setViewMode("transposer")}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                  viewMode === "transposer"
+                    ? darkMode ? "bg-gray-700 text-pink-400 shadow" : "bg-white text-blue-700 shadow"
+                    : darkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-500 hover:text-gray-800"
+                }`}
+              >
+                Transposer
+              </button>
+              <button
+                onClick={() => setViewMode("tuner")}
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                  viewMode === "tuner"
+                    ? darkMode ? "bg-gray-700 text-pink-400 shadow" : "bg-white text-blue-700 shadow"
+                    : darkMode ? "text-gray-400 hover:text-gray-200" : "text-gray-500 hover:text-gray-800"
+                }`}
+              >
+                Stem Gitar
+              </button>
+            </div>
+          </div>
 
           <div className="flex gap-2">
             {/* Font Control Button */}
@@ -319,104 +349,110 @@ export default function App() {
           </div>
         )}
 
-        {/* Input & Key Selector */}
-        <ChordInput
-          value={textareaValue}
-          onChange={setTextareaValue}
-          onTranspose={handleTransposeClick}
-          onUp={handleTransposeUp}
-          onDown={handleTransposeDown}
-          onClear={handleClear}
-          hasText={!!textareaValue.trim()}
-          darkMode={darkMode} 
-        />
-
-        <KeySelector currentKey={currentKey.name} onSelect={handleSelectKey} />
-
-        {/* Tabs Section */}
-        <div className="mt-5">
-          {/* Tab Buttons */}
-          <div
-            className={`flex border-b mb-4 ${
-              darkMode ? "border-gray-700" : "border-gray-200"
-            }`}
-          >
-            <button
-              className={`px-4 py-2 text-m font-semibold transition ${
-                activeTab === "output"
-                  ? darkMode
-                    ? "border-b-2 border-pink-400 text-pink-400"
-                    : "border-b-2 border-blue-600 text-blue-600"
-                  : darkMode
-                  ? "text-gray-400 hover:text-pink-400"
-                  : "text-gray-500 hover:text-blue-500"
-              }`}
-              onClick={() => setActiveTab("output")}
-            >
-              Result
-            </button>
-            <button
-              className={`px-4 py-2 text-m font-semibold transition ${
-                activeTab === "cara"
-                  ? darkMode
-                    ? "border-b-2 border-pink-400 text-pink-400"
-                    : "border-b-2 border-blue-600 text-blue-600"
-                  : darkMode
-                  ? "text-gray-400 hover:text-pink-400"
-                  : "text-gray-500 hover:text-blue-500"
-              }`}
-              onClick={() => setActiveTab("cara")}
-            >
-              Cara Penggunaan
-            </button>
-          </div>
-
-          {/* Tab Content */}
-          {activeTab === "output" ? (
-            <ChordOutput 
-            html={displayHtml} 
-            darkMode={darkMode}
-            fontSize={fontSize}
-            isBold={isBold}
+        {viewMode === "transposer" ? (
+          <>
+            {/* Input & Key Selector */}
+            <ChordInput
+              value={textareaValue}
+              onChange={setTextareaValue}
+              onTranspose={handleTransposeClick}
+              onUp={handleTransposeUp}
+              onDown={handleTransposeDown}
+              onClear={handleClear}
+              hasText={!!textareaValue.trim()}
+              darkMode={darkMode} 
             />
-          ) : (
-            <div
-              className={`rounded-lg p-4 leading-relaxed shadow-sm transition-colors duration-300 ${
-                darkMode
-                  ? "bg-gray-800 border border-gray-700 text-gray-200"
-                  : "bg-blue-50 border border-blue-200 text-gray-700"
-              }`}
-            >
-              <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base transition-colors duration-300">
-                <li>
-                  Tentukan nada dasar (key) dari lagu yang ingin kamu ubah.{" "}
-                  <br />
-                    <span>
-                      Contoh: Jika pada bagian intro tertulis <b>D E A F#m</b>,
-                      maka pilih atau masukkan chord awal <b>D</b>.
-                    </span>
-                </li>
-                <li>
-                  Masukkan chord dan lirik lagu (jika ada) ke dalam kolom input
-                  di atas.
-                </li>
-                <li>
-                  Klik tombol <kbd>Transpose</kbd> untuk menampilkan hasil
-                  perubahan chord.
-                </li>
-                <li>
-                  Gunakan tombol <kbd>+</kbd> atau <kbd>–</kbd> untuk menaikkan
-                  atau menurunkan setengah nada, atau pilih langsung dari daftar
-                  chord di atas.
-                </li>
-                <li>
-                  Klik tombol <kbd>Clear</kbd> untuk menghapus input dan hasil
-                  sebelumnya.
-                </li>
-              </ol>
+
+            <KeySelector currentKey={currentKey.name} onSelect={handleSelectKey} />
+
+            {/* Tabs Section */}
+            <div className="mt-5">
+              {/* Tab Buttons */}
+              <div
+                className={`flex border-b mb-4 ${
+                  darkMode ? "border-gray-700" : "border-gray-200"
+                }`}
+              >
+                <button
+                  className={`px-4 py-2 text-m font-semibold transition ${
+                    activeTab === "output"
+                      ? darkMode
+                        ? "border-b-2 border-pink-400 text-pink-400"
+                        : "border-b-2 border-blue-600 text-blue-600"
+                      : darkMode
+                      ? "text-gray-400 hover:text-pink-400"
+                      : "text-gray-500 hover:text-blue-500"
+                  }`}
+                  onClick={() => setActiveTab("output")}
+                >
+                  Result
+                </button>
+                <button
+                  className={`px-4 py-2 text-m font-semibold transition ${
+                    activeTab === "cara"
+                      ? darkMode
+                        ? "border-b-2 border-pink-400 text-pink-400"
+                        : "border-b-2 border-blue-600 text-blue-600"
+                      : darkMode
+                      ? "text-gray-400 hover:text-pink-400"
+                      : "text-gray-500 hover:text-blue-500"
+                  }`}
+                  onClick={() => setActiveTab("cara")}
+                >
+                  Cara Penggunaan
+                </button>
+              </div>
+
+              {/* Tab Content */}
+              {activeTab === "output" ? (
+                <ChordOutput 
+                html={displayHtml} 
+                darkMode={darkMode}
+                fontSize={fontSize}
+                isBold={isBold}
+                />
+              ) : (
+                <div
+                  className={`rounded-lg p-4 leading-relaxed shadow-sm transition-colors duration-300 ${
+                    darkMode
+                      ? "bg-gray-800 border border-gray-700 text-gray-200"
+                      : "bg-blue-50 border border-blue-200 text-gray-700"
+                  }`}
+                >
+                  <ol className="list-decimal pl-5 space-y-2 text-sm sm:text-base transition-colors duration-300">
+                    <li>
+                      Tentukan nada dasar (key) dari lagu yang ingin kamu ubah.{" "}
+                      <br />
+                        <span>
+                          Contoh: Jika pada bagian intro tertulis <b>D E A F#m</b>,
+                          maka pilih atau masukkan chord awal <b>D</b>.
+                        </span>
+                    </li>
+                    <li>
+                      Masukkan chord dan lirik lagu (jika ada) ke dalam kolom input
+                      di atas.
+                    </li>
+                    <li>
+                      Klik tombol <kbd>Transpose</kbd> untuk menampilkan hasil
+                      perubahan chord.
+                    </li>
+                    <li>
+                      Gunakan tombol <kbd>+</kbd> atau <kbd>–</kbd> untuk menaikkan
+                      atau menurunkan setengah nada, atau pilih langsung dari daftar
+                      chord di atas.
+                    </li>
+                    <li>
+                      Klik tombol <kbd>Clear</kbd> untuk menghapus input dan hasil
+                      sebelumnya.
+                    </li>
+                  </ol>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          </>
+        ) : (
+          <GuitarTuner darkMode={darkMode} />
+        )}
 
         {/* Footer */}
         <div
