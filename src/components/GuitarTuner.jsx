@@ -18,6 +18,27 @@ const getMedian = (arr) => {
   return sorted.length % 2 !== 0 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
 };
 
+const playTone = (frequency) => {
+  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContextClass) return;
+  const ctx = new AudioContextClass();
+  const osc = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  
+  osc.type = 'triangle';
+  osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+  
+  gainNode.gain.setValueAtTime(0, ctx.currentTime);
+  gainNode.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.05);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+
+  osc.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  
+  osc.start();
+  osc.stop(ctx.currentTime + 2.5);
+};
+
 export default function GuitarTuner({ darkMode }) {
   const [isListening, setIsListening] = useState(false);
   const isListeningRef = useRef(false);
@@ -42,6 +63,7 @@ export default function GuitarTuner({ darkMode }) {
     setTargetString(strObj);
     targetStringRef.current = strObj;
     handleModeChange('manual');
+    playTone(strObj.hz);
   };
 
   const audioContextRef = useRef(null);
@@ -127,6 +149,13 @@ export default function GuitarTuner({ darkMode }) {
         const target = targetStringRef.current;
         targetCents = getCentsOffTarget(medianPitch, target.hz);
         targetNoteName = target.note;
+      }
+
+      // Ignore noise that is more than 160 cents away from the expected target
+      // This prevents random speech or background noise from making the tuner jump wildly
+      if (Math.abs(targetCents) > 160) {
+        rafIdRef.current = requestAnimationFrame(updatePitch);
+        return;
       }
 
       // Smooth the cents visually using Exponential Moving Average
@@ -283,10 +312,10 @@ export default function GuitarTuner({ darkMode }) {
                ▶
             </div>
           </div>
-          <div className={`mt-3 font-mono text-xl ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-            {pitch ? `${Math.round(pitch)} Hz` : 'Mendengarkan...'}
+          <div className={`mt-3 font-mono text-3xl font-bold ${getTuningColor()}`}>
+            {note ? (Math.round(cents) > 0 ? `+${Math.round(cents)}` : Math.round(cents)) : ''}
           </div>
-          <div className={`mt-2 text-lg font-bold min-h-[28px] ${getTuningColor()}`}>
+          <div className={`mt-1 text-lg font-bold min-h-[28px] ${getTuningColor()}`}>
             {note ? (
               Math.abs(cents) < 10 
               ? '✅ Pas di Tengah!' 
