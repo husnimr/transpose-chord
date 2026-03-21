@@ -33,9 +33,9 @@ export default function ChordInput({
         onChange={(e) => onChange(e.target.value)}
       />
 
-      <div className="mt-2 flex gap-2 justify-between items-center">
+      <div className="mt-2 flex flex-wrap gap-2 justify-between items-center">
         {/* --- Left Buttons --- */}
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={onTranspose}
             className="ExTranspose bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors duration-200"
