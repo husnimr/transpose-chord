@@ -9,7 +9,7 @@ import {
   getClosestStandardString,
   getCentsOffTarget
 } from '../utils/pitchDetection';
-import { FaMicrophone, FaMicrophoneSlash } from 'react-icons/fa';
+import { FaMicrophone, FaMicrophoneSlash, FaCheckCircle, FaArrowUp, FaArrowDown, FaCaretLeft, FaCaretRight } from 'react-icons/fa';
 
 const getMedian = (arr) => {
   if (arr.length === 0) return 0;
@@ -24,19 +24,25 @@ const playTone = (frequency) => {
   const ctx = new AudioContextClass();
   const osc = ctx.createOscillator();
   const gainNode = ctx.createGain();
+  const filter = ctx.createBiquadFilter();
   
-  osc.type = 'triangle';
+  osc.type = 'sawtooth';
   osc.frequency.setValueAtTime(frequency, ctx.currentTime);
   
   gainNode.gain.setValueAtTime(0, ctx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.05);
-  gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2.5);
+  gainNode.gain.linearRampToValueAtTime(1, ctx.currentTime + 0.02);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 3);
 
-  osc.connect(gainNode);
+  filter.type = 'lowpass';
+  filter.frequency.setValueAtTime(frequency * 4, ctx.currentTime);
+  filter.frequency.exponentialRampToValueAtTime(frequency, ctx.currentTime + 2);
+
+  osc.connect(filter);
+  filter.connect(gainNode);
   gainNode.connect(ctx.destination);
   
   osc.start();
-  osc.stop(ctx.currentTime + 2.5);
+  osc.stop(ctx.currentTime + 3);
 };
 
 export default function GuitarTuner({ darkMode }) {
@@ -255,7 +261,7 @@ export default function GuitarTuner({ darkMode }) {
               : 'bg-blue-600 hover:bg-blue-700 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]'
           }`}
         >
-          {isListening ? <><FaMicrophoneSlash /> Berhenti</> : <><FaMicrophone /> Mulai Stem Gitar</>}
+          {isListening ? <><FaMicrophoneSlash /> Berhenti</> : <><FaMicrophone /> Mulai</>}
         </button>
       </div>
 
@@ -289,16 +295,16 @@ export default function GuitarTuner({ darkMode }) {
         }`} />
 
         {/* Labels below dial */}
-        <div className={`absolute bottom-2 left-6 font-bold text-sm opacity-60 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>⬇ Flat</div>
-        <div className={`absolute bottom-2 right-6 font-bold text-sm opacity-60 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Sharp ⬆</div>
+        <div className={`absolute bottom-2 left-6 font-bold text-sm opacity-60 flex items-center gap-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}><FaArrowDown /> Rendah</div>
+        <div className={`absolute bottom-2 right-6 font-bold text-sm opacity-60 flex items-center gap-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>Tinggi <FaArrowUp /></div>
       </div>
 
       {isListening ? (
         <div className="text-center w-full min-h-[140px]">
           <div className="flex items-center justify-center gap-4">
             {/* Flat indicator */}
-            <div className={`text-5xl font-black transition-opacity duration-200 ${note && cents < -10 ? 'text-red-500 opacity-100 drop-shadow-md' : 'text-gray-300 opacity-20 dark:text-gray-600'}`}>
-               ◀
+            <div className={`text-5xl transition-opacity duration-200 ${note && cents < -10 ? 'text-red-500 opacity-100 drop-shadow-md' : 'text-gray-300 opacity-20 dark:text-gray-600'}`}>
+               <FaCaretLeft />
             </div>
 
             <div className="flex flex-col items-center justify-center w-32">
@@ -308,20 +314,20 @@ export default function GuitarTuner({ darkMode }) {
             </div>
             
             {/* Sharp indicator */}
-            <div className={`text-5xl font-black transition-opacity duration-200 ${note && cents > 10 ? 'text-red-500 opacity-100 drop-shadow-md' : 'text-gray-300 opacity-20 dark:text-gray-600'}`}>
-               ▶
+            <div className={`text-5xl transition-opacity duration-200 ${note && cents > 10 ? 'text-red-500 opacity-100 drop-shadow-md' : 'text-gray-300 opacity-20 dark:text-gray-600'}`}>
+               <FaCaretRight />
             </div>
           </div>
           <div className={`mt-3 font-mono text-3xl font-bold ${getTuningColor()}`}>
             {note ? (Math.round(cents) > 0 ? `+${Math.round(cents)}` : Math.round(cents)) : ''}
           </div>
-          <div className={`mt-1 text-lg font-bold min-h-[28px] ${getTuningColor()}`}>
+          <div className={`mt-2 text-lg font-bold min-h-[28px] flex items-center justify-center gap-2 ${getTuningColor()}`}>
             {note ? (
               Math.abs(cents) < 10 
-              ? '✅ Pas di Tengah!' 
+              ? <><FaCheckCircle /> Nada Tepat</> 
               : cents < 0 
-                ? 'Kencangkan (Naikkan nada) ⬆️' 
-                : 'Kendurkan (Turunkan nada) ⬇️'
+                ? <><FaArrowUp /> Naikkan nada</> 
+                : <><FaArrowDown /> Turunkan nada</>
             ) : 'Bunyikan senar...'}
           </div>
         </div>

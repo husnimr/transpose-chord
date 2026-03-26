@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
-import { FaInstagram, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaInstagram, FaLinkedin, FaGithub, FaGuitar } from "react-icons/fa";
 import { MdOutlineInstallMobile, MdOutlineTextIncrease, MdOutlineTextDecrease } from "react-icons/md";
 import { GoBold } from "react-icons/go";
 import { RiFontSize, RiResetRightFill } from "react-icons/ri";
@@ -162,11 +162,11 @@ export default function App() {
         <div className="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
           <div className="flex flex-col items-center md:items-start gap-3">
             <h1
-              className={`text-3xl font-bold text-center md:text-left ${
+              className={`text-3xl font-bold text-center md:text-left flex items-center justify-center md:justify-start gap-2 ${
                 darkMode ? "text-pink-400" : "text-pink-600"
               }`}
             >
-              🎶 Transpose Chord
+              <FaGuitar /> Transpose Chord
             </h1>
             
             {/* View Mode Toggle */}
